@@ -25,7 +25,7 @@ public class TypePadCrawler {
 	public static void main(String[] args) throws Exception{
 		
 		TypePadCrawler typePadCrawler = new TypePadCrawler();
-		typePadCrawler.getQueryResults("star wars",1);
+		typePadCrawler.getQueryResults("donald trump",1);
 	
 	}
 	
@@ -49,9 +49,10 @@ public class TypePadCrawler {
 
 			int responseCode = con.getResponseCode();
 			
+			System.out.println("\nSending 'GET' request to URL : " + url);
+			System.out.println("Response Code : " + responseCode);
+			
 			if(responseCode == HttpURLConnection.HTTP_OK){
-				System.out.println("\nSending 'GET' request to URL : " + url);
-				System.out.println("Response Code : " + responseCode);
 
 				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 				while ((inputLine = br.readLine()) != null) {
@@ -106,12 +107,9 @@ public class TypePadCrawler {
 		buildQuery.delete(buildQuery.length()-3, buildQuery.length());
 		finalBuildQuery = buildQuery.toString();
 		
-		
 		//TODO: Temporary lines of code. Can be removed
 		finalBuildQuery = "\""+ finalBuildQuery + "\"";
 		finalBuildQuery = "title:"+finalBuildQuery;
-		
-		
 		
 		finalBuildQuery = WebConstants.QUERY+finalBuildQuery;
 		
@@ -134,7 +132,7 @@ public class TypePadCrawler {
 		//Initial Query Results
 		String url = WebConstants.BASE_URL+WebConstants.ASSETS+WebConstants.QUERY_SEPARATOR;
 		//Adding the query string
-		url = url + buildQuery("star wars",sortParam);
+		url = url + buildQuery(rawQuery,sortParam);
 		
 		//Default Variable Declaration 
 		JSONObject resultJSONObject = null; 
@@ -152,7 +150,7 @@ public class TypePadCrawler {
 			
 			httpResponse = getHTTPResponse(url);
 			if (!httpResponse.equals("")){
-				resultJSONObject = new JSONObject(getHTTPResponse(url));
+				resultJSONObject = new JSONObject(httpResponse);
 				retrievedEntriesArray = resultJSONObject.getJSONArray("entries");
 				try{
 					moreResultsToken = resultJSONObject.getString("moreResultsToken");
